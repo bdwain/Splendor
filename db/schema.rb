@@ -11,7 +11,57 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140905161543) do
+ActiveRecord::Schema.define(version: 20140905231003) do
+
+  create_table "cards", force: true do |t|
+  end
+
+  create_table "games", force: true do |t|
+    t.integer  "num_players",             null: false
+    t.integer  "status",      default: 1, null: false
+    t.integer  "creator_id",              null: false
+    t.integer  "winner_id"
+    t.integer  "blue_chips",  default: 0, null: false
+    t.integer  "red_chips",   default: 0, null: false
+    t.integer  "green_chips", default: 0, null: false
+    t.integer  "black_chips", default: 0, null: false
+    t.integer  "white_chips", default: 0, null: false
+    t.integer  "gold_chips",  default: 0, null: false
+    t.integer  "turn_num",    default: 1, null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "games", ["creator_id"], name: "index_games_on_creator_id", using: :btree
+  add_index "games", ["winner_id"], name: "index_games_on_winner_id", using: :btree
+
+  create_table "nobles", force: true do |t|
+    t.integer "game_id",                     null: false
+    t.integer "player_id"
+    t.integer "blue_card_cost",  default: 0, null: false
+    t.integer "red_card_cost",   default: 0, null: false
+    t.integer "green_card_cost", default: 0, null: false
+    t.integer "black_card_cost", default: 0, null: false
+    t.integer "white_card_cost", default: 0, null: false
+  end
+
+  create_table "players", force: true do |t|
+    t.integer  "game_id",                   null: false
+    t.integer  "user_id",                   null: false
+    t.integer  "turn_num",      default: 1, null: false
+    t.integer  "turn_status",   default: 0, null: false
+    t.datetime "turn_deadline"
+    t.integer  "blue_chips",    default: 0, null: false
+    t.integer  "red_chips",     default: 0, null: false
+    t.integer  "green_chips",   default: 0, null: false
+    t.integer  "black_chips",   default: 0, null: false
+    t.integer  "white_chips",   default: 0, null: false
+    t.integer  "gold_chips",    default: 0, null: false
+  end
+
+  add_index "players", ["game_id"], name: "index_players_on_game_id", using: :btree
+  add_index "players", ["user_id", "game_id"], name: "index_players_on_user_id_and_game_id", unique: true, using: :btree
+  add_index "players", ["user_id"], name: "index_players_on_user_id", using: :btree
 
   create_table "users", force: true do |t|
     t.string   "displayname",            limit: 20,              null: false
