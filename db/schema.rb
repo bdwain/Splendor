@@ -14,6 +14,18 @@
 ActiveRecord::Schema.define(version: 20140905231003) do
 
   create_table "cards", force: true do |t|
+    t.integer "game_id",                        null: false
+    t.integer "player_id"
+    t.integer "position",       default: 0
+    t.integer "level",          default: 1,     null: false
+    t.integer "color",          default: 0,     null: false
+    t.boolean "is_reserved",    default: false, null: false
+    t.integer "victory_points", default: 0,     null: false
+    t.integer "blue_cost",      default: 0,     null: false
+    t.integer "red_cost",       default: 0,     null: false
+    t.integer "green_cost",     default: 0,     null: false
+    t.integer "black_cost",     default: 0,     null: false
+    t.integer "white_cost",     default: 0,     null: false
   end
 
   create_table "games", force: true do |t|
