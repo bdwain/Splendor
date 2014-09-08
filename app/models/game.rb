@@ -3,6 +3,7 @@ class Game < ActiveRecord::Base
   belongs_to :winner, :class_name => 'User', :foreign_key => 'winner_id'
 
   has_many :players, :inverse_of => :game, :autosave => true, :dependent => :destroy
+  has_many :cards, :inverse_of => :game, :autosave => true, :dependent => :destroy
 
   def current_player
     players.find{|p| p.turn_status != 0}
@@ -107,7 +108,7 @@ class Game < ActiveRecord::Base
     #give each player their own turn
     players.shuffle.each_with_index do |player, index|
       player.turn_num = index + 1
-      #player.turn_status = (index == 0 ?  : )
+      player.turn_status = (index == 0 ? TAKING_TURN : WAITING_FOR_TURN)
       player.blue_chips = 0
       player.red_chips = 0
       player.green_chips = 0
@@ -115,8 +116,6 @@ class Game < ActiveRecord::Base
       player.black_chips = 0
       player.gold_chips = 0
     end
-
-    self.current_player = players.find{|p| p.turn_num == 1}
 
     default_chip_count = num_players == 4 ? 7 : (num_players == 3 ? 5 : 4)
     self.blue_chips = default_chip_count
@@ -126,18 +125,22 @@ class Game < ActiveRecord::Base
     self.black_chips = default_chip_count
     self.gold_chips = 5
 
-    #init deck
-    #14.times { development_cards.build(type: KNIGHT) }
-    #5.times { development_cards.build(type: VICTORY_POINT) }
-    #2.times do
-    #  development_cards.build(type: ROAD_BUILDING)
-    #  development_cards.build(type: YEAR_OF_PLENTY)
-    #  development_cards.build(type: MONOPOLY)
-    #end
+    #create deck (use a file with the actual card list later. this is temporary)
+    [BLUE, GREEN, RED, BLACK, WHITE].each do |color|
+      (1..3).each do |level|
+        4.times{ cards.build(color: COLOR, level: level, victory_points: (level - 1)*2, blue_cost: color == BLUE ? 0 : level, 
+          red_cost: color == RED ? 0 : level, green_cost: color == GREEN ? 0 : level, black_cost: color == BLACK ? 0 : level, 
+          white_cost: color == WHITE ? 0 : level)}
+      end
+    end
 
-    #development_cards.shuffle.each_with_index { |card, index| card.position = index }
+    #shuffle cards
+    (1..3).each do |level|
+      cur_cards = cards.select {|card| card.level == level}.shuffle
+      cur_cards.last(cur_cards.length - 4).each_with_index { |card, index| card.position = index + 1 }
+    end
 
-    noble_count = num_players + 1
+    #noble_count = num_players + 1
     #init nobles
 
     self.status = STATUS_PLAYING

@@ -1,0 +1,10 @@
+BLUE = 1
+RED = 2
+GREEN = 3
+BLACK = 4
+WHITE = 5
+
+#player turn statuses
+WAITING_FOR_TURN = 0
+TAKING_TURN = 1
+CHOOSING_NOBLE = 2
