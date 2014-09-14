@@ -3,7 +3,13 @@ Splendor::Application.routes.draw do
   get "home/index"
 
   
-  devise_for :users
+  namespace :api do
+    namespace :v1 do
+      devise_for :users
+      resources :games, only: [:index, :show, :new, :create], shallow: true
+    end
+  end
+  
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
