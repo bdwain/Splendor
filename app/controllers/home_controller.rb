@@ -1,6 +1,6 @@
 class HomeController < ApplicationController
 
   def index
-    render json: {msg: "Splendor"}
+    render html: "Splendor"
   end
 end
