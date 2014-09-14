@@ -1,6 +1,6 @@
 class Player < ActiveRecord::Base
   belongs_to :game, :inverse_of => :players
-  belongs_to :user, :inverse_of => :players
+  belongs_to :user
   has_many :cards, :inverse_of => :game, :autosave => true
 
   validates_presence_of :game, :user
