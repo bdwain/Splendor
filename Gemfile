@@ -31,6 +31,7 @@ gem "rolify", ">= 3.2.0"
 gem "figaro", ">= 0.6.3"
 gem 'factory_girl_rails', :require => false #don't require because of http://goo.gl/kgnKz
 gem "active_model_serializers", "~> 0.8.0"
+gem 'simple_token_authentication'
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 gem "therubyracer", ">= 0.11.3", :platform => :ruby, :require => "v8"

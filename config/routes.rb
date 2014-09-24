@@ -2,10 +2,17 @@ Splendor::Application.routes.draw do
   root :to => 'home#index'
   get "home/index"
 
-  
   namespace :api do
     namespace :v1 do
-      devise_for :users
+      devise_for :users, skip: :all
+      devise_scope :api_v1_user do
+        post 'login' => 'sessions#create', :as => :login
+        delete 'logout' => 'sessions#destroy', :as => :logout
+        post 'register' => 'registrations#create', :as => :registers
+        delete 'delete_account' => 'registrations#destroy', :as => :delete_account
+        post 'reconfirm_account' => 'confirmations#create', :as => :reconfirm
+        get 'confirm_account' => 'confirmations#show', :as => :confirm
+      end
       resources :games, only: [:index, :show, :create], shallow: true
     end
   end
