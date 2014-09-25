@@ -1,11 +1,10 @@
 module Api
   module V1
     class GamesController < AuthenticatedController
-      #before_filter :authenticate_user!
 
       # GET /games
       def index
-        render json: Game.all
+        render Game.all
       end
 
       # GET /games/:id

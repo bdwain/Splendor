@@ -3,12 +3,10 @@ module Api
     class RegistrationsController < Devise::RegistrationsController
       respond_to :json
      
-      acts_as_token_authentication_handler_for User, fallback_to_devise: false
-      skip_before_filter :authenticate_entity_from_token!, only: [ :create ]
-      skip_before_filter :authenticate_entity!, only: [ :create ]
+      acts_as_token_authentication_handler_for User, fallback_to_devise: false, only: [:destroy]
 
-      skip_before_filter :authenticate_scope!
-      append_before_filter :authenticate_scope!, only: [ :destroy ]
+      skip_before_filter :authenticate_scope! #devise made this and it's not necessary
+      append_before_filter :require_authentication_of_entity!, only: [:destroy]
      
       def create
         build_resource(sign_up_params)
@@ -27,7 +25,7 @@ module Api
       end
 
       def destroy
-        resource.destroy
+        current_user.destroy
         Devise.sign_out_all_scopes ? sign_out : sign_out(resource_name)
         
         render json: {

@@ -12,4 +12,9 @@ class ApplicationController < ActionController::API
     devise_parameter_sanitizer.for(:sign_up) << :displayname
     devise_parameter_sanitizer.for(:account_update) << :displayname
   end
+
+  #seems like the cleanest way of ensuring a login until something similar gets put in the simple token authentication gem
+  def require_authentication_of_entity!
+    user_signed_in? || throw(:warden, scope: :"user")      
+  end
 end
