@@ -7,34 +7,38 @@ module Api
       skip_before_filter :authenticate_entity_from_token!, only: [ :create ]
       skip_before_filter :authenticate_entity!, only: [ :create ]
 
-     
       skip_before_filter :authenticate_scope!
       append_before_filter :authenticate_scope!, only: [ :destroy ]
      
       def create
-        ActiveRecord::Base.transaction do
-
-            build_resource(user_params)
-            if resource.save
-              render json: "success", status: 200
-            else
-              clean_up_passwords resource
-              render json: resource.errors.as_json, status: 400
-            end
-
+        build_resource(sign_up_params)
+        if resource.save
+          status = HTTP_OK
+          message = "Successfully created new account for email #{sign_up_params[:email]}."
+        else
+          clean_up_passwords resource
+          status = HTTP_INTERNAL_SERVER_ERROR
+          message = "Failed to create new account for email #{sign_up_params[:email]}."
         end
+
+        render json: {
+          message: message
+        }, status: status
       end
-     
+
       def destroy
         resource.destroy
         Devise.sign_out_all_scopes ? sign_out : sign_out(resource_name)
-        render json: "success"
+        
+        render json: {
+          message: 'Successfully deleted the account.'
+        }, status: HTTP_OK
       end
-     
+
       private
 
-      def user_params
-        params.require(:user).permit(:email, :password, :password_confirmation, :displayname)
+      def sign_up_params
+        devise_parameter_sanitizer.sanitize(:sign_up)
       end
     end
   end

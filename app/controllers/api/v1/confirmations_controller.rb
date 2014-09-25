@@ -14,20 +14,16 @@ module Api
         resource_class.send_confirmation_instructions(resource_params)
 
         if successfully_sent?(resource)
-          render json: "success", status: 200
+          message = "successfully resent confirmation email"
+          status = HTTP_OK
         else
-          render json: "success", status: 500
+          message = "failed to resend confirmation email"
+          status = HTTP_INTERNAL_SERVER_ERROR
         end
-      end
 
-      def show
-        self.resource = resource_class.confirm_by_token(params[:confirmation_token])
-
-        if resource.errors.empty?
-          render json: "success", status: 200
-        else
-          render json: resource.errors, status: 400
-        end
+        render json: {
+          message: message
+        }, status: status
       end
     end
   end

@@ -2,7 +2,7 @@ module Api
   module V1
     class SessionsController < Devise::SessionsController
       respond_to :json
-     
+
       acts_as_token_authentication_handler_for User, fallback_to_devise: false
       skip_before_filter :authenticate_entity_from_token!
       skip_before_filter :authenticate_entity!
@@ -12,17 +12,28 @@ module Api
      
       def create
         warden.authenticate!(:scope => resource_name)
-        @user = current_user
+
+        render json: {
+          message: 'Logged in',
+          auth_token: current_user.authentication_token
+        }, status: HTTP_OK
       end
      
       def destroy
         if user_signed_in?
-          @user = current_user
-          @user.authentication_token = nil
-          @user.save
+          current_user.authentication_token = nil
+          current_user.save!
+
+          message = "Logged out successfully"
+          status = HTTP_OK
         else
-          render 'failure'
+          message = "Failed to log out. You need to be logged in to log out."
+          status = HTTP_UNAUTHORIZED
         end
+
+        render json: {
+          message: message
+        }, status: status
       end
     end
   end
