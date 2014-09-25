@@ -4,14 +4,13 @@ module Api
       respond_to :json
 
       acts_as_token_authentication_handler_for User, fallback_to_devise: false
-      skip_before_filter :authenticate_entity_from_token!
-      skip_before_filter :authenticate_entity!
-      
-      before_filter :authenticate_entity_from_token!, :only => [:destroy]
-      before_filter :authenticate_entity!, :only => [:destroy]
+      skip_before_filter :authenticate_entity_from_token!, :only => [:create]
+      skip_before_filter :authenticate_entity!, :only => [:create]
+
+      skip_before_filter :verify_signed_out_user, :only => :destroy
      
       def create
-        warden.authenticate!(:scope => resource_name)
+        self.resource = warden.authenticate!(:scope => resource_name)
 
         render json: {
           message: 'Logged in',

@@ -4,10 +4,10 @@ Splendor::Application.routes.draw do
 
   devise_for :users, :path_prefix => 'api/v1', skip: :all
   devise_scope :user do
-    get 'confirm_account' => 'confirmations#show', as: 'confirmation'
+    get 'confirm_account' => 'confirmations#show', :as => :confirmation, :format => false
   end
 
-  namespace :api do
+  namespace :api, :format => false, :defaults => {:format => 'json'} do
     namespace :v1 do
       devise_scope :user do
         post 'login' => 'sessions#create', :as => :login
