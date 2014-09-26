@@ -13,7 +13,7 @@ module Api
         if game
           render json: game
         else
-          render json: {error: 'The game could not be found'}, status: 404
+          render json: {error: 'The game could not be found'}, status: HTTP_NOT_FOUND
         end
       end
 
@@ -21,17 +21,18 @@ module Api
       def create
         begin
           game = Game.new(game_params)
-          game.creator = User.first #TODO: current_user
+          game.creator = current_user
           game.save!
           render json: game
         rescue
-          render json: {error: 'Something went wrong creating the game'}, status: 500
+          render json: {message: 'Something went wrong creating the game',
+                        errors: game.errors}, status: HTTP_FORBIDDEN
         end
       end
 
       private
       def game_params
-        params.permit(:num_players)
+        params.require(:game).permit(:num_players)
       end
     end
   end

@@ -21,8 +21,7 @@ class Game < ActiveRecord::Base
             :inclusion => { :in => [STATUS_WAITING_FOR_PLAYERS, 
              STATUS_PLAYING, STATUS_COMPLETED] }
 
-  validates :num_players, :presence => true, :inclusion => { :in => 2.upto(4) }, 
-            :numericality => {:only_integer => true}
+  validates :num_players, :presence => true, :inclusion => { :in => 2.upto(4), :message => " should be 2 3 or 4" }
 
   validates :turn_num, :presence => true, 
             :numericality => {:only_integer => true, :greater_than => 0}
