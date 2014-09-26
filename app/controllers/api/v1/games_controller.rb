@@ -4,7 +4,7 @@ module Api
 
       # GET /games
       def index
-        render Game.all
+        render json: Game.all
       end
 
       # GET /games/:id
