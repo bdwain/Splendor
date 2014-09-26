@@ -8,3 +8,13 @@
 
 require 'factory_girl_rails'
 
+#for easier testing
+if Rails.env == "development"
+  user1 = FactoryGirl.create(:confirmed_user)
+  user2 = FactoryGirl.create(:confirmed_user)
+  game = Game.new({num_players: 2})
+  game.creator = user1
+  game.save
+  game.add_user?(user2)
+  game.save
+end
