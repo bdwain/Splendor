@@ -127,7 +127,7 @@ class Game < ActiveRecord::Base
     #create deck (use a file with the actual card list later. this is temporary)
     [BLUE, GREEN, RED, BLACK, WHITE].each do |color|
       (1..3).each do |level|
-        4.times{ cards.build(color: COLOR, level: level, victory_points: (level - 1)*2, blue_cost: color == BLUE ? 0 : level, 
+        4.times{ cards.build(color: color, level: level, victory_points: (level - 1)*2, blue_cost: color == BLUE ? 0 : level, 
           red_cost: color == RED ? 0 : level, green_cost: color == GREEN ? 0 : level, black_cost: color == BLACK ? 0 : level, 
           white_cost: color == WHITE ? 0 : level)}
       end

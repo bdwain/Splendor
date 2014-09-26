@@ -16,7 +16,9 @@ Splendor::Application.routes.draw do
         delete 'delete_account' => 'registrations#destroy', :as => :delete_account
         post 'reconfirm_account' => 'confirmations#create', :as => :reconfirm
       end
-      resources :games, only: [:index, :show, :create], shallow: true
+      resources :games, only: [:index, :show, :create], shallow: true do
+        resources :players, only: [:create, :destroy], shallow: true
+      end
     end
   end
   
