@@ -17,7 +17,9 @@ Splendor::Application.routes.draw do
         post 'reconfirm_account' => 'confirmations#create', :as => :reconfirm
       end
       resources :games, only: [:index, :show, :create], shallow: true do
-        resources :players, only: [:create, :destroy], shallow: true
+        resources :players, only: [:create, :destroy], shallow: true do
+          post 'moves' => 'players#make_move'
+        end
       end
     end
   end

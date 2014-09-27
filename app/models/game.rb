@@ -5,16 +5,14 @@ class Game < ActiveRecord::Base
   has_many :players, :inverse_of => :game, :autosave => true, :dependent => :destroy
   has_many :cards, :inverse_of => :game, :autosave => true, :dependent => :destroy
 
-  def current_player
-    players.find{|p| p.turn_status != 0}
-  end
-
   private
   STATUS_WAITING_FOR_PLAYERS = 1
   STATUS_PLAYING = 2
   STATUS_COMPLETED = 3
 
   public
+  include ChipOwner
+
   validates_presence_of :creator
 
   validates :status, :presence => true, 
@@ -26,13 +24,6 @@ class Game < ActiveRecord::Base
   validates :turn_num, :presence => true, 
             :numericality => {:only_integer => true, :greater_than => 0}
 
-  validates :blue_chips, :turn_num, :presence => true, :inclusion => { :in => 0.upto(7) }
-  validates :red_chips, :turn_num, :presence => true, :inclusion => { :in => 0.upto(7) }
-  validates :green_chips, :turn_num, :presence => true, :inclusion => { :in => 0.upto(7) }
-  validates :black_chips, :turn_num, :presence => true, :inclusion => { :in => 0.upto(7) }
-  validates :white_chips, :turn_num, :presence => true, :inclusion => { :in => 0.upto(7) }
-  validates :gold_chips, :turn_num, :presence => true, :inclusion => { :in => 0.upto(5) }
-
   def waiting_for_players?
     status == STATUS_WAITING_FOR_PLAYERS
   end
@@ -43,10 +34,6 @@ class Game < ActiveRecord::Base
 
   def completed?
     status == STATUS_COMPLETED
-  end
-
-  def sorted_players
-    @sorted_players ||= players.sort{|p1, p2| p1.turn_num <=> p2.turn_num}
   end
 
   #returns the player for a corresponding user, or nil if they aren't playing
@@ -96,7 +83,56 @@ class Game < ActiveRecord::Base
     true
   end
 
+  def get_top_card_of_level(level)
+    return cards.find{|card| card.level == level && card.position == 1}
+  end
+
+  def take_chips(played_id, taken, returned)
+    #if we use the instance of player given to us from the controller, game.save won't pick up the changes
+    player = players.find{|p| p.id == played_id}
+    if player.turn_status != TAKING_TURN
+      raise "Not currently player's turn"
+    end
+
+    if taken.count > 3 || taken.count + player.chip_count - returned.count > 10
+      raise "Took too many chips"
+    end
+
+    if taken.count + player.chip_count - returned.count < 10 && returned.count != 0
+      raise "Returned too many chips"
+    end
+
+    if taken.gold != 0
+      raise "Not allowed to take gold chips"
+    end
+
+    #validations will handle negative chip counts. see chip_owner
+
+    [[taken.blue, blue_chips], [taken.red, red_chips], [taken.green, green_chips], 
+    [taken.black, black_chips], [taken.white, white_chips]].each do |taken_color, game_color|
+      if taken_color < 0 || taken_color > 2 || (taken_color == 2 && (game_color < 4 || taken.count != 2))
+        raise "Invalid chips taken"
+      end
+    end
+
+    #TODO: maybe add a check to see if they didn't take enough chips
+
+    player.add_chips(taken)
+    player.subtract_chips(returned)
+    subtract_chips(taken)
+    add_chips(returned)
+
+    advance_turns(player)
+    players.find{|p| p.id == player.id}
+    save!
+  end
+
   private
+  def advance_turns(player)
+    player.turn_status = WAITING_FOR_TURN
+    players.find{|p| p.turn_num == (player.turn_num % num_players) + 1 }.turn_status = TAKING_TURN
+  end
+
   def init_game?
     #give each player their own turn
     players.shuffle.each_with_index do |player, index|
