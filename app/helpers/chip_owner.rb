@@ -10,7 +10,7 @@ module ChipOwner
     validates :gold_chips, :turn_num, :presence => true, :inclusion => { :in => 0.upto(5), :message => "need to be from 0-5" }
 
     def chip_count
-      @chip_count ||= blue_chips + red_chips + green_chips + black_chips + white_chips + gold_chips
+      blue_chips + red_chips + green_chips + black_chips + white_chips + gold_chips
     end
 
     def subtract_chips(chip_collection)

@@ -12,4 +12,12 @@ class Player < ActiveRecord::Base
 
   validates :turn_status, :presence => true, 
             :numericality => {:only_integer => true, :greater_than_or_equal_to => 0}
+
+  def played_cards
+    cards.where(:is_reserved => false)
+  end
+
+  def reserved_cards
+    cards.where(:is_reserved => true)
+  end
 end

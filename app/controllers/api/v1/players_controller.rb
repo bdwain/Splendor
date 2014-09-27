@@ -34,23 +34,24 @@ module Api
 
       #POST /players/:player_id/moves
       def make_move
-        player = get_player(params[:player_id])
+        player = get_player(params[:player_id].to_i)
         status = HTTP_OK
         if player != nil
+          game = player.game
           begin
             case move_params[:type]
             when 'chips'
               taken_chips = ChipCollection.new(JSON::parse(move_params[:taken_chips] || "[]"))
               returned_chips = ChipCollection.new(JSON::parse(move_params[:returned_chips] || "[]"))
-              player.game.take_chips(player.id, taken_chips, returned_chips)
+              game.take_chips(player, taken_chips, returned_chips)
             when 'reserve'
-              card = Card.find_by_id(move_params[:card_id]) || game.get_top_card_of_level(move_params[:card_level] || "[]")
+              card = game.get_card_by_id(move_params[:card_id].to_i) || game.get_top_card_of_level(move_params[:card_level].to_i)
               returned_chips = ChipCollection.new(JSON::parse(move_params[:returned_chips] || "[]"))
-              #player.game.reserve_card(player.id, card, returned_chips)
+              player.game.reserve_card(player, card, returned_chips)
             when 'buy'
-              card = Card.find_by_id(move_params[:card_id])
+              card = game.get_card_by_id(move_params[:card_id].to_i)
               spent_chips = ChipCollection.new(JSON::parse(move_params[:spent_chips] || "[]"))
-              #player.game.buy_card(player.id, card, spent_chips)
+              #game.buy_card(player, card, spent_chips)
             else
               raise "Invalid move"
             end
@@ -77,7 +78,7 @@ module Api
       def get_player(id)
         player = Player.find_by_id(id)
         if player && player.user == current_user
-          return player
+          return player.game.players.find{|p| p.id == id} #use the game's instance because they're different
         else
           return nil
         end

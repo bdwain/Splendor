@@ -4,18 +4,9 @@ class PlayerSerializer < ActiveModel::Serializer
    :played_cards, :reserved_card_count, :reserved_cards
 
   has_one :user
-  delegate :current_user, to: :scope
 
   def reserved_card_count
     reserved_cards.size
-  end
-
-  def played_cards
-    object.cards.where(:is_reserved => false)
-  end
-
-  def reserved_cards
-    object.cards.where(:is_reserved => true)
   end
 
   def filter(keys)

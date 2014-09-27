@@ -87,9 +87,11 @@ class Game < ActiveRecord::Base
     return cards.find{|card| card.level == level && card.position == 1}
   end
 
-  def take_chips(played_id, taken, returned)
-    #if we use the instance of player given to us from the controller, game.save won't pick up the changes
-    player = players.find{|p| p.id == played_id}
+  def get_card_by_id(id)
+    return cards.find{|card| card.id == id}
+  end
+
+  def take_chips(played, taken, returned)
     if player.turn_status != TAKING_TURN
       raise "Not currently player's turn"
     end
@@ -123,7 +125,41 @@ class Game < ActiveRecord::Base
     add_chips(returned)
 
     advance_turns(player)
-    players.find{|p| p.id == player.id}
+    save!
+  end
+
+  def reserve_card(player, card, returned)
+    if player.turn_status != TAKING_TURN
+      raise "Not currently player's turn"
+    end
+
+    if returned.count > 1 || returned.count == 1 && (game.gold_chips == 0 || player.chip_count != 10)
+      raise "Returned too many chips"
+    end
+
+    if player.chip_count == 10 && returned.count == 0 && gold_chips != 0
+      raise "Need to return chips"
+    end
+
+    if card.position != 0 && card.position != 1
+      raise "That card can't be reserved"
+    end
+
+    if player.reserved_cards.size == 3
+      raise "Only 3 cards can be reserved at a time"
+    end
+
+    give_card_to_player(card, player)
+    card.is_reserved = true
+
+    if gold_chips != 0
+      self.gold_chips -=1
+      player.gold_chips += 1
+    end
+    player.subtract_chips(returned)
+    add_chips(returned)
+
+    advance_turns(player)
     save!
   end
 
@@ -131,6 +167,14 @@ class Game < ActiveRecord::Base
   def advance_turns(player)
     player.turn_status = WAITING_FOR_TURN
     players.find{|p| p.turn_num == (player.turn_num % num_players) + 1 }.turn_status = TAKING_TURN
+    if player.turn_num == num_players
+      self.turn_num += 1
+    end
+  end
+
+  def give_card_to_player(card, player)
+    card.player = player
+    card.position = -1
   end
 
   def init_game?
