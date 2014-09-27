@@ -51,7 +51,7 @@ module Api
             when 'buy'
               card = game.get_card_by_id(move_params[:card_id].to_i)
               spent_chips = ChipCollection.new(JSON::parse(move_params[:spent_chips] || "[]"))
-              #game.buy_card(player, card, spent_chips)
+              game.buy_card(player, card, spent_chips)
             else
               raise "Invalid move"
             end

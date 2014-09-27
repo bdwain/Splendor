@@ -91,7 +91,7 @@ class Game < ActiveRecord::Base
     return cards.find{|card| card.id == id}
   end
 
-  def take_chips(played, taken, returned)
+  def take_chips(player, taken, returned)
     if player.turn_status != TAKING_TURN
       raise "Not currently player's turn"
     end
@@ -149,7 +149,8 @@ class Game < ActiveRecord::Base
       raise "Only 3 cards can be reserved at a time"
     end
 
-    give_card_to_player(card, player)
+    card.player = player
+    card.position = -1
     card.is_reserved = true
 
     if gold_chips != 0
@@ -163,6 +164,22 @@ class Game < ActiveRecord::Base
     save!
   end
 
+  def buy_card(player, card, spent)
+    if player.turn_status != TAKING_TURN
+      raise "Not currently player's turn"
+    end
+
+    if card.position != 0 && (card.player != player || !card.is_reserved)
+      raise "That card can't be bought right now"
+    end
+
+    player.buy_card(card, spent)
+    add_chips(spent)
+
+    advance_turns(player)
+    save!
+  end
+
   private
   def advance_turns(player)
     player.turn_status = WAITING_FOR_TURN
@@ -170,11 +187,6 @@ class Game < ActiveRecord::Base
     if player.turn_num == num_players
       self.turn_num += 1
     end
-  end
-
-  def give_card_to_player(card, player)
-    card.player = player
-    card.position = -1
   end
 
   def init_game?
