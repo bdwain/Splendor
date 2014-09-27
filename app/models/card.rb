@@ -12,9 +12,8 @@ class Card < ActiveRecord::Base
   validates :color, :presence => true, 
             :inclusion => { :in => [BLUE, RED, GREEN, BLACK, WHITE] }
 
-  validates :level, :presence => true, :inclusion => { :in => 1.upto(3) },
-            :numericality => {:only_integer => true}
-
+  validates :level, :presence => true, :inclusion => { :in => 1.upto(3) }
+  
   validates :blue_cost, :presence => true, 
             :numericality => {:only_integer => true, :greater_than_or_equal_to => 0}
   validates :red_cost, :presence => true, 
