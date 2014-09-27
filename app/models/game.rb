@@ -26,18 +26,12 @@ class Game < ActiveRecord::Base
   validates :turn_num, :presence => true, 
             :numericality => {:only_integer => true, :greater_than => 0}
 
-  validates :blue_chips, :turn_num, :presence => true, :inclusion => { :in => 0.upto(7) },
-            :numericality => {:only_integer => true}
-  validates :red_chips, :turn_num, :presence => true, :inclusion => { :in => 0.upto(7) },
-            :numericality => {:only_integer => true}
-  validates :green_chips, :turn_num, :presence => true, :inclusion => { :in => 0.upto(7) },
-            :numericality => {:only_integer => true}
-  validates :black_chips, :turn_num, :presence => true, :inclusion => { :in => 0.upto(7) },
-            :numericality => {:only_integer => true}
-  validates :white_chips, :turn_num, :presence => true, :inclusion => { :in => 0.upto(7) },
-            :numericality => {:only_integer => true}
-  validates :gold_chips, :turn_num, :presence => true, :inclusion => { :in => 0.upto(5) },
-            :numericality => {:only_integer => true}
+  validates :blue_chips, :turn_num, :presence => true, :inclusion => { :in => 0.upto(7) }
+  validates :red_chips, :turn_num, :presence => true, :inclusion => { :in => 0.upto(7) }
+  validates :green_chips, :turn_num, :presence => true, :inclusion => { :in => 0.upto(7) }
+  validates :black_chips, :turn_num, :presence => true, :inclusion => { :in => 0.upto(7) }
+  validates :white_chips, :turn_num, :presence => true, :inclusion => { :in => 0.upto(7) }
+  validates :gold_chips, :turn_num, :presence => true, :inclusion => { :in => 0.upto(5) }
 
   def waiting_for_players?
     status == STATUS_WAITING_FOR_PLAYERS
