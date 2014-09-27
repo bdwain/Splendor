@@ -77,4 +77,8 @@ class Player < ActiveRecord::Base
     card.position = -1
     card.player = self
   end
+
+  def get_victory_points
+    cards.inject(0){|sum,card| sum += card.victory_points if !card.is_reserved }
+  end
 end

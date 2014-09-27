@@ -8,6 +8,7 @@ class Game < ActiveRecord::Base
   private
   STATUS_WAITING_FOR_PLAYERS = 1
   STATUS_PLAYING = 2
+  STATUS_LAST_TURN
   STATUS_COMPLETED = 3
 
   public
@@ -30,6 +31,10 @@ class Game < ActiveRecord::Base
 
   def playing?
     status == STATUS_PLAYING
+  end
+
+  def last_turn?
+    status == STATUS_LAST_TURN
   end
 
   def completed?
@@ -183,6 +188,12 @@ class Game < ActiveRecord::Base
   private
   def advance_turns(player)
     player.turn_status = WAITING_FOR_TURN
+    if (player.get_victory_points >= 15 || last_turn?) && player.turn_num == num_players
+      complete_game
+    elsif player.get_victory_points >= 15
+      status = STATUS_LAST_TURN
+    end
+
     players.find{|p| p.turn_num == (player.turn_num % num_players) + 1 }.turn_status = TAKING_TURN
     if player.turn_num == num_players
       self.turn_num += 1
