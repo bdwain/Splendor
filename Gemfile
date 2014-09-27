@@ -30,7 +30,7 @@ gem "cancan", ">= 1.6.9"
 gem "rolify", ">= 3.2.0"
 gem "figaro", ">= 0.6.3"
 gem 'factory_girl_rails', :require => false #don't require because of http://goo.gl/kgnKz
-gem "active_model_serializers", "~> 0.8.0"
+gem "active_model_serializers", "~> 0.9.0"
 gem 'simple_token_authentication'
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
