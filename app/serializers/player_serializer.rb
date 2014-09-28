@@ -4,6 +4,7 @@ class PlayerSerializer < ActiveModel::Serializer
    :played_cards, :reserved_card_count, :reserved_cards
 
   has_one :user
+  has_many :nobles
 
   def reserved_cards
     ActiveModel::ArraySerializer.new(object.reserved_cards, each_serializer: CardSerializer)

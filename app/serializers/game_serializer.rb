@@ -3,7 +3,7 @@ class GameSerializer < ActiveModel::Serializer
              :black_chips, :white_chips, :gold_chips, :turn_num, 
              :level_1_card_count, :level_2_card_count, :level_3_card_count
   has_one :winner, :creator
-  has_many :players, :cards
+  has_many :players, :cards, :nobles
 
   def cards
     object.cards.select{|card| card.position == 0}
@@ -19,6 +19,10 @@ class GameSerializer < ActiveModel::Serializer
 
   def level_3_card_count
     level_n_card_count(3)
+  end
+
+  def nobles
+    object.nobles.where(player: nil)
   end
 
   private

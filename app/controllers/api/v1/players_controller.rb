@@ -46,12 +46,18 @@ module Api
               game.take_chips(player, taken_chips, returned_chips)
             when 'reserve'
               card = game.get_card_by_id(move_params[:card_id].to_i) || game.get_top_card_of_level(move_params[:card_level].to_i)
+              raise "Invalid card" unless card
               returned_chips = ChipCollection.new(JSON::parse(move_params[:returned_chips] || "[]"))
               player.game.reserve_card(player, card, returned_chips)
             when 'buy'
               card = game.get_card_by_id(move_params[:card_id].to_i)
+              raise "Invalid card" unless card
               spent_chips = ChipCollection.new(JSON::parse(move_params[:spent_chips] || "[]"))
               game.buy_card(player, card, spent_chips)
+            when 'noble'
+              noble = game.get_noble_by_id(move_params[:noble_id].to_i)
+              raise "Invalid noble" unless noble
+              game.choose_noble(player, noble)
             else
               raise "Invalid move"
             end

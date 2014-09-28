@@ -97,6 +97,10 @@ class Game < ActiveRecord::Base
     return cards.find{|card| card.id == id}
   end
 
+  def get_noble_by_id(id)
+    return nobles.find{|noble| noble.id == id}
+  end
+
   def take_chips(player, taken, returned)
     if player.turn_status != TAKING_TURN
       raise "Not currently player's turn"
@@ -130,7 +134,7 @@ class Game < ActiveRecord::Base
     subtract_chips(taken)
     add_chips(returned)
 
-    advance_turns(player)
+    finish_turn(player)
     save!
   end
 
@@ -166,7 +170,7 @@ class Game < ActiveRecord::Base
     player.subtract_chips(returned)
     add_chips(returned)
 
-    advance_turns(player)
+    finish_turn(player)
     save!
   end
 
@@ -194,15 +198,47 @@ class Game < ActiveRecord::Base
       end
     end
 
+    finish_turn(player)
+    save!
+  end
+
+  def choose_noble(player, noble)
+    if player.turn_status != CHOOSING_NOBLE
+      raise "Can't choose a noble right now"
+    end
+
+    if noble.player != nil
+      raise "That noble is already taken"
+    end
+
+    if !player.can_afford_noble?(noble)
+      raise "Can't afford that noble"
+    end
+
+    player.nobles << noble
+    noble.player = player
     advance_turns(player)
     save!
   end
 
   private
+  def finish_turn(player)
+    available_nobles = nobles.select{|noble| !noble.player && player.can_afford_noble?(noble) }
+
+    if available_nobles.count > 1
+      player.turn_status = CHOOSING_NOBLE
+      return
+    elsif available_nobles.count == 1
+      player.nobles << available_nobles.first
+      available_nobles.first.player = player
+    end
+    advance_turns(player)
+  end
+
   def advance_turns(player)
     player.turn_status = WAITING_FOR_TURN
     if (player.victory_points >= 15 || last_turn?) && player.turn_num == num_players
-      complete_game
+      finish_game
       return
     elsif player.victory_points >= 15
       self.status = STATUS_LAST_TURN
@@ -214,7 +250,7 @@ class Game < ActiveRecord::Base
     end
   end
 
-  def complete_game
+  def finish_game
     self.status = STATUS_COMPLETED
     potential_winners = players.group_by {|p| p.victory_points}.max.last
     if potential_winners.count > 1

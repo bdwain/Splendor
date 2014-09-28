@@ -26,11 +26,11 @@ class Player < ActiveRecord::Base
   def can_buy_card?(card, spent)
     cost = ChipCollection.new(card)
 
-    cost.blue -= played_cards.select{|card| card.color == BLUE}.size
-    cost.red -= played_cards.select{|card| card.color == RED}.size
-    cost.green -= played_cards.select{|card| card.color == GREEN}.size
-    cost.black -= played_cards.select{|card| card.color == BLACK}.size
-    cost.white -= played_cards.select{|card| card.color == WHITE}.size
+    cost.blue -= num_cards_of_color(BLUE)
+    cost.red -= num_cards_of_color(RED)
+    cost.green -= num_cards_of_color(GREEN)
+    cost.black -= num_cards_of_color(BLACK)
+    cost.white -= num_cards_of_color(WHITE)
 
     golds_left = spent.gold
     
@@ -75,5 +75,18 @@ class Player < ActiveRecord::Base
   def victory_points
     card_points = played_cards.inject(0){|sum,card| sum += card.victory_points}
     nobles.inject(card_points){|sum, noble| sum += noble.victory_points}
+  end
+
+  def can_afford_noble?(noble)
+    num_cards_of_color(BLUE) >= noble.blue_card_cost &&
+    num_cards_of_color(RED) >= noble.red_card_cost &&
+    num_cards_of_color(GREEN) >= noble.green_card_cost &&
+    num_cards_of_color(BLACK) >= noble.black_card_cost &&
+    num_cards_of_color(WHITE) >= noble.white_card_cost
+  end
+
+  private
+  def num_cards_of_color(color)
+    played_cards.select{|card| card.color == color}.size
   end
 end
