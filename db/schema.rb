@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140921042922) do
+ActiveRecord::Schema.define(version: 20140928033453) do
 
   create_table "cards", force: true do |t|
     t.integer "game_id",                        null: false
@@ -55,6 +55,7 @@ ActiveRecord::Schema.define(version: 20140921042922) do
     t.integer "green_card_cost", default: 0, null: false
     t.integer "black_card_cost", default: 0, null: false
     t.integer "white_card_cost", default: 0, null: false
+    t.integer "victory_points"
   end
 
   create_table "players", force: true do |t|

@@ -1,0 +1,12 @@
+[
+{"victory_points": 3, "white_card_cost": 3, "blue_card_cost": 3, "black_card_cost": 3, "red_card_cost": 0, "green_card_cost": 0},
+{"victory_points": 3, "white_card_cost": 0, "blue_card_cost": 3, "black_card_cost": 0, "red_card_cost": 3, "green_card_cost": 3},
+{"victory_points": 3, "white_card_cost": 3, "blue_card_cost": 0, "black_card_cost": 3, "red_card_cost": 3, "green_card_cost": 0},
+{"victory_points": 3, "white_card_cost": 0, "blue_card_cost": 0, "black_card_cost": 0, "red_card_cost": 4, "green_card_cost": 4},
+{"victory_points": 3, "white_card_cost": 0, "blue_card_cost": 4, "black_card_cost": 0, "red_card_cost": 0, "green_card_cost": 4},
+{"victory_points": 3, "white_card_cost": 0, "blue_card_cost": 0, "black_card_cost": 4, "red_card_cost": 4, "green_card_cost": 0},
+{"victory_points": 3, "white_card_cost": 4, "blue_card_cost": 0, "black_card_cost": 4, "red_card_cost": 0, "green_card_cost": 0},
+{"victory_points": 3, "white_card_cost": 3, "blue_card_cost": 3, "black_card_cost": 0, "red_card_cost": 0, "green_card_cost": 3},
+{"victory_points": 3, "white_card_cost": 0, "blue_card_cost": 0, "black_card_cost": 3, "red_card_cost": 3, "green_card_cost": 3},
+{"victory_points": 3, "white_card_cost": 4, "blue_card_cost": 4, "black_card_cost": 0, "red_card_cost": 0, "green_card_cost": 0}
+]

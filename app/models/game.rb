@@ -4,6 +4,7 @@ class Game < ActiveRecord::Base
 
   has_many :players, :inverse_of => :game, :autosave => true, :dependent => :destroy
   has_many :cards, :inverse_of => :game, :autosave => true, :dependent => :destroy
+  has_many :nobles, :inverse_of => :game, :autosave => true, :dependent => :destroy
 
   private
   STATUS_WAITING_FOR_PLAYERS = 1
@@ -215,7 +216,20 @@ class Game < ActiveRecord::Base
 
   def complete_game
     self.status = STATUS_COMPLETED
-    self.winner = players.max_by {|p| p.victory_points}.user
+    potential_winners = players.group_by {|p| p.victory_points}.max.last
+    if potential_winners.count > 1
+      potential_winners = potential_winners.group_by {|p| p.played_cards.count}.min.last
+
+      if potential_winners.count > 1
+        potential_winners = potential_winners.group_by {|p| p.chip_count}.max.last
+
+        if potential_winners.count > 1
+          potential_winners = [potential_winners.max_by {|p| p.turn_num}]
+        end
+      end
+    end
+
+    self.winner = potential_winners.first.user
   end
 
   def init_game?
@@ -254,8 +268,14 @@ class Game < ActiveRecord::Base
       cur_cards.last(cur_cards.length - 4).each_with_index { |card, index| card.position = index + 1 }
     end
 
-    #noble_count = num_players + 1
-    #init nobles
+    noble_list = nil
+    File.open(File.join(Rails.root, 'lib', 'assets', 'noble_list.json')) do |f|
+      noble_list = JSON.load f
+    end
+
+    noble_list.sample(num_players + 1).each do |noble_data|
+      nobles.build noble_data
+    end
 
     self.status = STATUS_PLAYING
     save

@@ -2,6 +2,7 @@ class Player < ActiveRecord::Base
   belongs_to :game, :inverse_of => :players
   belongs_to :user
   has_many :cards, :inverse_of => :player, :autosave => true
+  has_many :nobles, :inverse_of => :player, :autosave => true
 
   include ChipOwner
   include ChipCollection
@@ -72,6 +73,7 @@ class Player < ActiveRecord::Base
   end
 
   def victory_points
-    played_cards.inject(0){|sum,card| sum += card.victory_points}
+    card_points = played_cards.inject(0){|sum,card| sum += card.victory_points}
+    nobles.inject(card_points){|sum, noble| sum += noble.victory_points}
   end
 end
