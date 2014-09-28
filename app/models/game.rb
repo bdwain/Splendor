@@ -8,8 +8,8 @@ class Game < ActiveRecord::Base
   private
   STATUS_WAITING_FOR_PLAYERS = 1
   STATUS_PLAYING = 2
-  STATUS_LAST_TURN
-  STATUS_COMPLETED = 3
+  STATUS_LAST_TURN= 3
+  STATUS_COMPLETED = 4
 
   public
   include ChipOwner
@@ -18,7 +18,7 @@ class Game < ActiveRecord::Base
 
   validates :status, :presence => true, 
             :inclusion => { :in => [STATUS_WAITING_FOR_PLAYERS, 
-             STATUS_PLAYING, STATUS_COMPLETED] }
+             STATUS_PLAYING, STATUS_LAST_TURN, STATUS_COMPLETED] }
 
   validates :num_players, :presence => true, :inclusion => { :in => 2.upto(4), :message => " should be 2 3 or 4" }
 
@@ -178,8 +178,20 @@ class Game < ActiveRecord::Base
       raise "That card can't be bought right now"
     end
 
-    player.buy_card(card, spent)
+    was_reserved = card.is_reserved
+    raise "Can't buy card with those chips" unless player.can_buy_card?(card, spent)
+    player.subtract_chips(spent)
     add_chips(spent)
+    player.cards << card
+    card.player = player
+    card.is_reserved = false
+    card.position = -1
+
+    if !was_reserved
+      cards.select {|deck_card| deck_card.level == card.level && deck_card.position > 0}.each do |deck_card|
+        deck_card.position -= 1
+      end
+    end
 
     advance_turns(player)
     save!
@@ -188,16 +200,22 @@ class Game < ActiveRecord::Base
   private
   def advance_turns(player)
     player.turn_status = WAITING_FOR_TURN
-    if (player.get_victory_points >= 15 || last_turn?) && player.turn_num == num_players
+    if (player.victory_points >= 15 || last_turn?) && player.turn_num == num_players
       complete_game
-    elsif player.get_victory_points >= 15
-      status = STATUS_LAST_TURN
+      return
+    elsif player.victory_points >= 15
+      self.status = STATUS_LAST_TURN
     end
 
     players.find{|p| p.turn_num == (player.turn_num % num_players) + 1 }.turn_status = TAKING_TURN
     if player.turn_num == num_players
       self.turn_num += 1
     end
+  end
+
+  def complete_game
+    self.status = STATUS_COMPLETED
+    self.winner = players.max_by {|p| p.victory_points}.user
   end
 
   def init_game?

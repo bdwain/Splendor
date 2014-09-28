@@ -22,16 +22,14 @@ class Player < ActiveRecord::Base
     cards.where(:is_reserved => true)
   end
 
-  def buy_card(card, spent)
+  def can_buy_card?(card, spent)
     cost = ChipCollection.new(card)
-    puts cost.inspect
-    puts card.inspect
-    puts spent.inspect
-    cost.blue -= cards.select{|card| card.color == BLUE && !card.is_reserved}.size
-    cost.red -= cards.select{|card| card.color == RED && !card.is_reserved}.size
-    cost.green -= cards.select{|card| card.color == GREEN && !card.is_reserved}.size
-    cost.black -= cards.select{|card| card.color == BLACK && !card.is_reserved}.size
-    cost.white -= cards.select{|card| card.color == WHITE && !card.is_reserved}.size
+
+    cost.blue -= played_cards.select{|card| card.color == BLUE}.size
+    cost.red -= played_cards.select{|card| card.color == RED}.size
+    cost.green -= played_cards.select{|card| card.color == GREEN}.size
+    cost.black -= played_cards.select{|card| card.color == BLACK}.size
+    cost.white -= played_cards.select{|card| card.color == WHITE}.size
 
     golds_left = spent.gold
     
@@ -70,15 +68,10 @@ class Player < ActiveRecord::Base
       end
     end
 
-    raise "Can't buy the card with those chips" if golds_left != 0
-
-    subtract_chips(spent)
-    card.is_reserved = false
-    card.position = -1
-    card.player = self
+    return golds_left == 0
   end
 
-  def get_victory_points
-    cards.inject(0){|sum,card| sum += card.victory_points if !card.is_reserved }
+  def victory_points
+    played_cards.inject(0){|sum,card| sum += card.victory_points}
   end
 end
