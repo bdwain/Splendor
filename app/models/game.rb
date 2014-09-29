@@ -289,13 +289,13 @@ class Game < ActiveRecord::Base
     self.black_chips = default_chip_count
     self.gold_chips = 5
 
-    #create deck (use a file with the actual card list later. this is temporary)
-    [BLUE, GREEN, RED, BLACK, WHITE].each do |color|
-      (1..3).each do |level|
-        4.times{ cards.build(color: color, level: level, victory_points: (level - 1)*2, blue_cost: color == BLUE ? 0 : level, 
-          red_cost: color == RED ? 0 : level, green_cost: color == GREEN ? 0 : level, black_cost: color == BLACK ? 0 : level, 
-          white_cost: color == WHITE ? 0 : level)}
-      end
+    card_list = nil
+    File.open(File.join(Rails.root, 'lib', 'assets', 'card_list.json')) do |f|
+      card_list = JSON.load f
+    end
+
+    card_list.each do |card_data|
+      cards.build card_data
     end
 
     #shuffle cards
