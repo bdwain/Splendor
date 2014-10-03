@@ -10,16 +10,21 @@ var app = angular.module('splendor', [
   'splendor.services'
 ]);
 
-app.config(['$routeProvider', '$locationProvider', 
-  function($routeProvider, $locationProvider) {
+app.config(['$routeProvider', '$httpProvider', '$locationProvider', 
+  function($routeProvider, $httpProvider, $locationProvider) {
     $routeProvider.
       when('/', {
         templateUrl: 'home.html',
         controller: 'HomeCtrl'
       }).
+      when('/login', {
+        templateUrl: 'login.html',
+        controller: 'LoginCtrl'
+      }).
       otherwise({
         redirectTo: '/'
       });
 
+      $httpProvider.interceptors.push('AuthInterceptor');
       $locationProvider.html5Mode(true);
   }]);
