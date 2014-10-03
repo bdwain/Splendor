@@ -1,28 +1,18 @@
 source 'https://rubygems.org'
+source 'https://rails-assets.org'
+
 ruby "2.1.2"
 
 gem 'rails', '4.1.0'
 gem 'rails-api'
 
-# Bundle edge Rails instead:
-# gem 'rails', :git => 'git://github.com/rails/rails.git'
+gem 'sprockets-rails', :require => 'sprockets/railtie'
+gem 'uglifier', '>= 2.5.0'
+gem 'rails-assets-lodash'
+gem 'rails-assets-angular', '1.2.26'
+gem 'rails-assets-angular-route', '1.2.26'
+gem 'angular-rails-templates'
 
-# To use ActiveModel has_secure_password
-# gem 'bcrypt-ruby', '~> 3.0.0'
-
-# To use Jbuilder templates for JSON
-# gem 'jbuilder'
-
-# Use unicorn as the app server
-# gem 'unicorn'
-
-# Deploy with Capistrano
-# gem 'capistrano'
-
-# To use debugger
-# gem 'debugger'
-
-gem 'jquery-rails'
 gem "mysql2", ">= 0.3.11"
 gem "libv8", ">= 3.11.8"
 gem "devise", ">= 2.2.3"
@@ -35,10 +25,6 @@ gem 'simple_token_authentication'
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 gem "therubyracer", ">= 0.11.3", :platform => :ruby, :require => "v8"
-
-gem "less-rails", ">= 2.2.6"
-gem "twitter-bootstrap-rails", ">= 2.2.4"
-gem 'uglifier', '>= 2.5.0'
 
 group :development do
   gem "rails-erd"
