@@ -12,6 +12,8 @@ gem 'rails-assets-lodash'
 gem 'rails-assets-angular', '1.2.26'
 gem 'rails-assets-angular-route', '1.2.26'
 gem 'angular-rails-templates'
+gem "twitter-bootstrap-rails"
+gem "rails-assets-jquery", "2.1.1"
 
 gem "mysql2", ">= 0.3.11"
 gem "libv8", ">= 3.11.8"
