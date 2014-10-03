@@ -13,12 +13,12 @@ var app = angular.module('splendor', [
 app.config(['$routeProvider', '$locationProvider', 
   function($routeProvider, $locationProvider) {
     $routeProvider.
-      when('/home', {
+      when('/', {
         templateUrl: 'home.html',
         controller: 'HomeCtrl'
       }).
       otherwise({
-        redirectTo: '/home'
+        redirectTo: '/'
       });
 
       $locationProvider.html5Mode(true);
