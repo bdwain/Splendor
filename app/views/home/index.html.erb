@@ -23,6 +23,7 @@
         <ul class="nav navbar-nav">
           <li ng-if="!authenticated" ng-class="path == '/login' ? 'active' : ''"><a href="#" ng-href="/login">Sign In</a></li>
           <li ng-if="authenticated"><a href="#" ng-click="logout();">Sign Out</a></li>
+          <li ng-if="!authenticated" ng-class="path == '/sign_up' ? 'active' : ''"><a href="#" ng-href="/sign_up">Sign Up</a></li>
         </ul>
       </div><!--/.nav-collapse -->
     </div>

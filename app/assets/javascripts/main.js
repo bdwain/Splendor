@@ -21,6 +21,10 @@ app.config(['$routeProvider', '$httpProvider', '$locationProvider',
         templateUrl: 'login.html',
         controller: 'LoginCtrl'
       }).
+      when('/sign_up', {
+        templateUrl: 'register.html',
+        controller: 'RegisterCtrl'
+      }).
       otherwise({
         redirectTo: '/'
       });
