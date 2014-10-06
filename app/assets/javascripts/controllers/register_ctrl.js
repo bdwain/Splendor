@@ -13,7 +13,9 @@ angular.module('splendor.controllers').controller('RegisterCtrl', ['$scope', 'Pa
 
     $scope.registerData = {
         email: "",
-        password: ""
+        password: "",
+        password_confirmation: "",
+        username: ""
     };
     
     $scope.message = "";

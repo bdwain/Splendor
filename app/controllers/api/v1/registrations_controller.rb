@@ -10,13 +10,15 @@ module Api
      
       def create
         build_resource(sign_up_params)
-        if resource.save
+        begin
+          resource.save!
           status = HTTP_OK
           message = "Successfully created new account for email #{sign_up_params[:email]}."
-        else
+        rescue => e
           clean_up_passwords resource
-          status = HTTP_INTERNAL_SERVER_ERROR
-          message = "Failed to create new account for email #{sign_up_params[:email]}."
+          status = HTTP_FORBIDDEN
+          message = e.message
+          message.slice!("Validation failed: ")
         end
 
         render json: {

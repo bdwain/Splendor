@@ -4,18 +4,13 @@ var services = angular.module('splendor.services');
 
 services.factory('RegistrationService', ['$http', '$q', '$window', function ($http, $q, $window) {
  return {
-    register: function (loginData) {
+    register: function (registerData) {
       var deferred = $q.defer();
-      var service = this;
-      $http.post('/api/v1/register', {user: loginData})
+      $http.post('/api/v1/register', {user: registerData})
         .success(function (response) {
-          $window.localStorage.setItem(service.authTokenIdentifier, response.auth_token);
-          $window.localStorage.setItem(service.userEmailIdentifier, loginData.email);
-
           deferred.resolve(response);
-
         }).error(function (err, status) {
-          deferred.reject(err.error);
+          deferred.reject(err.message);
         });
 
       return deferred.promise;
@@ -23,16 +18,11 @@ services.factory('RegistrationService', ['$http', '$q', '$window', function ($ht
 
     delete_account: function () {
       var deferred = $q.defer();
-      var service = this;
-      $http.delete('/api/v1/logout')
+      $http.delete('/api/v1/delete_account')
         .success(function (response) {
-          $window.localStorage.removeItem(service.authTokenIdentifier);
-          $window.localStorage.removeItem(service.userEmailIdentifier);
-
           deferred.resolve(response);
-
         }).error(function (err, status) {
-          deferred.reject(err.error);
+          deferred.reject(err.message);
         });
 
       return deferred.promise;
