@@ -10,8 +10,8 @@ class ApplicationController < ActionController::API
   protected
 
   def configure_permitted_parameters
-    devise_parameter_sanitizer.for(:sign_up) << :displayname
-    devise_parameter_sanitizer.for(:account_update) << :displayname
+    devise_parameter_sanitizer.for(:sign_up) << :username
+    devise_parameter_sanitizer.for(:account_update) << :username
   end
 
   #seems like the cleanest way of ensuring a login until something similar gets put in the simple token authentication gem

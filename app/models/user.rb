@@ -8,7 +8,7 @@ class User < ActiveRecord::Base
 
   has_many :players, :inverse_of => :user
                   
-  validates :displayname, :presence => true, :uniqueness => true,
+  validates :username, :presence => true, :uniqueness => true,
             :length => {:minimum => 3, :maximum => 20}
 
 end
