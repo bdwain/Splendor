@@ -10,7 +10,7 @@ angular.module('splendor.controllers').controller('MainCtrl', ['$scope', '$locat
     });
 
     $scope.logout = function(){
-      AuthenticationService.logOut().then(
+      AuthenticationService.logout().then(
         function (response) {
           $location.path('/login');
         },

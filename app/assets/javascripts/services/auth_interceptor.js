@@ -5,7 +5,8 @@ var services = angular.module('splendor.services');
 services.factory('AuthInterceptor', ['$window', '$q', '$location', '$injector',  
   function ($window, $q, $location, $injector) {
     var isApiRequest = function(path){
-      return path.indexOf($location.protocol() + "://" + $location.host() + ":" + $location.port() + "/api/v1/") == 0;
+      return path.indexOf($location.protocol() + "://" + $location.host() + ":" + $location.port() + "/api/v1") == 0 || 
+             path.indexOf("/api/v1") == 0;
     }
 
     return {

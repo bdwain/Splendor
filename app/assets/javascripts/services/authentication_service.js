@@ -36,7 +36,7 @@ services.factory('AuthenticationService', ['$http', '$q', '$window', function ($
       return deferred.promise;
     },
 
-    logOut: function () {
+    logout: function () {
       var deferred = $q.defer();
       var service = this;
       $http.delete('/api/v1/logout')
