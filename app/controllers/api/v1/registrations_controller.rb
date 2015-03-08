@@ -16,7 +16,7 @@ module Api
           message = "Successfully created new account for email #{sign_up_params[:email]}."
         rescue => e
           clean_up_passwords resource
-          status = HTTP_FORBIDDEN
+          status = HTTP_BAD_REQUEST
           message = e.message
           message.slice!("Validation failed: ")
         end

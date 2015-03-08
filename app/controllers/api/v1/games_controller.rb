@@ -13,7 +13,7 @@ module Api
         if game
           render json: game
         else
-          render json: {error: 'The game could not be found'}, status: HTTP_NOT_FOUND
+          render json: {message: 'The game could not be found'}, status: HTTP_NOT_FOUND
         end
       end
 
@@ -26,7 +26,7 @@ module Api
           render json: game
         rescue
           render json: {message: 'Something went wrong creating the game',
-                        errors: game.errors}, status: HTTP_FORBIDDEN
+                        errors: game.errors}, status: HTTP_BAD_REQUEST
         end
       end
 

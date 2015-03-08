@@ -7,9 +7,11 @@ module Api
       def create
         game = Game.find_by_id(params[:game_id])
         if game != nil && game.add_user?(current_user)
-          render json: game, status: HTTP_OK
+          render json: game.player(current_user), status: HTTP_OK
+        elsif game != nil
+          render json: {message: "Couldn't join the game"}, status: HTTP_FORBIDDEN
         else
-          render json: {error: "Couldn't join the game"}, status: HTTP_FORBIDDEN
+          render json: {message: "Couldn't find the game"}, status: HTTP_NOT_FOUND
         end
       end
 
@@ -17,8 +19,8 @@ module Api
       def destroy
         player = get_player(params[:id])
         if player == nil
-          message = "Invalid request"
-          status = HTTP_FORBIDDEN
+          message = "Invalid player"
+          status = HTTP_NOT_FOUND
         elsif !player.game.remove_player?(player)
           message = "The game already started. Can't quit now"
           status = HTTP_FORBIDDEN
@@ -62,15 +64,15 @@ module Api
               raise "Invalid move"
             end
           rescue JSON::ParserError
-            message = "Invalid request"
-            status = HTTP_FORBIDDEN
+            message = "Invalid move"
+            status = HTTP_BAD_REQUEST
           rescue => e
             message = e.message
-            status = HTTP_FORBIDDEN
+            status = HTTP_BAD_REQUEST
           end
         else
-          message = "Invalid request"
-          status = HTTP_FORBIDDEN
+          message = "Player not found"
+          status = HTTP_NOT_FOUND
         end
 
         if status == HTTP_OK

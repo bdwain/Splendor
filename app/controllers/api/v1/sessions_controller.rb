@@ -10,12 +10,13 @@ module Api
       skip_before_filter :verify_signed_out_user, :only => :destroy
 
       def create
-        self.resource = warden.authenticate!(:scope => resource_name)
-
-        render json: {
-          message: 'Logged in',
-          auth_token: current_user.authentication_token
-        }, status: HTTP_OK
+        self.resource = warden.authenticate(:scope => resource_name) #using authenticate! causes a weird uncatchable exception
+        
+        if current_user != nil
+          render json: {user: UserSerializer.new(current_user).as_json, auth_token: current_user.authentication_token}, status: HTTP_OK
+        else
+          render json: {message: "failure to log in"}, status: HTTP_UNAUTHORIZED
+        end
       end
      
       def destroy
