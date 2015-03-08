@@ -21,7 +21,4 @@ Splendor::Application.routes.draw do
       end
     end
   end
-  
-  get "/*path" => "home#index"
-  root :to => 'home#index'
 end

@@ -7,8 +7,4 @@ class User < ActiveRecord::Base
          :recoverable, :confirmable, :validatable
 
   has_many :players, :inverse_of => :user
-                  
-  validates :username, :presence => true, :uniqueness => true,
-            :length => {:minimum => 3, :maximum => 20}
-
 end

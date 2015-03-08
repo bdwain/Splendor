@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141006023402) do
+ActiveRecord::Schema.define(version: 20150308075003) do
 
   create_table "cards", force: true do |t|
     t.integer "game_id",                        null: false
@@ -77,9 +77,8 @@ ActiveRecord::Schema.define(version: 20141006023402) do
   add_index "players", ["user_id"], name: "index_players_on_user_id", using: :btree
 
   create_table "users", force: true do |t|
-    t.string   "username",               limit: 20,              null: false
-    t.string   "email",                             default: "", null: false
-    t.string   "encrypted_password",                default: "", null: false
+    t.string   "email",                  default: "", null: false
+    t.string   "encrypted_password",     default: "", null: false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.string   "confirmation_token"

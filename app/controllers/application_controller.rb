@@ -5,15 +5,7 @@ class ApplicationController < ActionController::API
   include ActionController::Serialization
   include SimpleTokenAuthentication::ActsAsTokenAuthenticationHandler
 
-  before_action :configure_permitted_parameters, if: :devise_controller?
-
   protected
-
-  def configure_permitted_parameters
-    devise_parameter_sanitizer.for(:sign_up) << :username
-    devise_parameter_sanitizer.for(:account_update) << :username
-  end
-
   #seems like the cleanest way of ensuring a login until something similar gets put in the simple token authentication gem
   def require_authentication_of_entity!
     user_signed_in? || throw(:warden, scope: :"user")      
