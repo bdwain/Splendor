@@ -7,11 +7,3 @@
 ActiveSupport.on_load(:action_controller) do
   wrap_parameters :format => [:json] if respond_to?(:wrap_parameters)
 end
-
-ActiveSupport.on_load(:active_model_serializers) do
-  # Disable for all serializers (except ArraySerializer)
-  ActiveModel::Serializer.root = false
-
-  # Disable for ArraySerializer
-  ActiveModel::ArraySerializer.root = false
-end
