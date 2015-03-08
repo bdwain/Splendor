@@ -15,7 +15,7 @@ module Api
         if current_user != nil
           render json: {user: UserSerializer.new(current_user).as_json, auth_token: current_user.authentication_token}, status: HTTP_OK
         else
-          render json: {message: "failure to log in"}, status: HTTP_UNAUTHORIZED
+          render json: {message: "Invalid credentials"}, status: HTTP_UNAUTHORIZED
         end
       end
      

@@ -14,6 +14,7 @@ gem "figaro", ">= 0.6.3"
 gem 'factory_girl_rails', :require => false #don't require because of http://goo.gl/kgnKz
 gem "active_model_serializers", "~> 0.9.0"
 gem 'simple_token_authentication'
+gem 'rack-cors', :require => 'rack/cors'
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 gem "therubyracer", ">= 0.11.3", :platform => :ruby, :require => "v8"

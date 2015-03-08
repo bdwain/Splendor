@@ -53,5 +53,12 @@ module Splendor
     config.assets.version = '1.0'
 
     config.assets.precompile += %w( *-bundle.js )
+
+    config.middleware.insert_before 0, "Rack::Cors" do
+      allow do
+        origins '*'
+        resource '*', :headers => :any, :methods => [:get, :post, :put, :patch, :delete, :options]
+      end
+    end
   end
 end
