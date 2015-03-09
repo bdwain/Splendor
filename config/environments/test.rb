@@ -30,7 +30,8 @@ Splendor::Application.configure do
   config.active_support.deprecation = :stderr
 
   # Mailer settings
-  config.action_mailer.perform_deliveries = false 
+  config.action_mailer.perform_deliveries = false
+  config.action_mailer.default_url_options = { :host => ENV["email_domain"] }
 
   config.eager_load = false
 end
