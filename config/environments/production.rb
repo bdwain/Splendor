@@ -74,14 +74,14 @@ Splendor::Application.configure do
   config.action_mailer.smtp_settings = {
     address: ENV["smtp_server"],
     port: ENV["smtp_port"],
-    domain: ENV["default_url"],
+    domain: ENV["email_domain"],
     authentication: :login,
     enable_starttls_auto: true,
     user_name: ENV["smtp_username"],
     password: ENV["smtp_password"]
   }
 
-  config.action_mailer.default_url_options = { :host => ENV["default_url"] }
+  config.action_mailer.default_url_options = { :host => ENV["email_domain"] }
 
   config.eager_load = true
 end

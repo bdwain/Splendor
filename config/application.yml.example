@@ -8,6 +8,7 @@ devise_pepper: SET_ME
 #REQUIRED: The default URL for your website. This value will probably be fine for dev and test, 
 #but if you'd like to change it for specific configurations, do it like production does below
 default_url: localhost:3000
+email_domain: localhost:3000
 
 production:
    #REQUIRED: Set this to the actual host of your production site before running in prod
@@ -17,3 +18,5 @@ production:
    smtp_port: SET_ME
    smtp_username: SET_ME
    smtp_password: SET_ME
+   #REQUIRED: the domain you want to send emails from. it's expected that the rails app itself will run under api.splendor.whatever
+   email_domain: SET_ME
