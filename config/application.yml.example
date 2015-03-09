@@ -12,3 +12,8 @@ default_url: localhost:3000
 production:
    #REQUIRED: Set this to the actual host of your production site before running in prod
    default_url: SET_ME
+   #REQUIRED: SMTP settings you use to send mail in production
+   smtp_server: SET_ME
+   smtp_port: SET_ME
+   smtp_username: SET_ME
+   smtp_password: SET_ME

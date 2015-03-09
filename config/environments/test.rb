@@ -31,7 +31,6 @@ Splendor::Application.configure do
 
   # Mailer settings
   config.action_mailer.perform_deliveries = false 
-  config.action_mailer.default_url_options = { :host => ENV["default_url"] }
 
   config.eager_load = false
 end
