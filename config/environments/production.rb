@@ -81,7 +81,7 @@ Splendor::Application.configure do
     password: ENV["smtp_password"]
   }
 
-  config.action_mailer.default_url_options = { :host => ENV["email_domain"] }
+  config.action_mailer.default_url_options = { :host => ENV["default_url"] }
 
   config.eager_load = true
 end
