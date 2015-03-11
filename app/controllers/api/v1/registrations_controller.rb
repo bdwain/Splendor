@@ -13,7 +13,7 @@ module Api
         begin
           resource.save!
           status = HTTP_OK
-          message = "Successfully created new account for email #{sign_up_params[:email]}."
+          message = "Successfully created new account for #{sign_up_params[:email]}. Please check your email to confirm the account."
         rescue => e
           clean_up_passwords resource
           status = HTTP_BAD_REQUEST
