@@ -9,6 +9,18 @@ class GameSerializer < ActiveModel::Serializer
     object.cards.select{|card| card.position == 0}
   end
 
+  def status
+    if object.waiting_for_players?
+      "waiting_for_players"
+    elsif object.playing?
+      "playing"
+    elsif object.last_turn?
+      "last_turn"
+    else
+      "completed"
+    end
+  end
+
   def level_1_card_count
     level_n_card_count(1)
   end

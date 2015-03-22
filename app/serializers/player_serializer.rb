@@ -6,6 +6,17 @@ class PlayerSerializer < ActiveModel::Serializer
   has_one :user
   has_many :nobles
 
+  def turn_status
+    case object.turn_status
+    when WAITING_FOR_TURN
+      "waiting_for_turn"
+    when TAKING_TURN
+      "taking_turn"
+    when CHOOSING_NOBLE
+      "choosing_noble"
+    end
+  end
+
   def reserved_cards
     ActiveModel::ArraySerializer.new(object.reserved_cards, each_serializer: CardSerializer)
   end
